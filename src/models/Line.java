@@ -20,6 +20,12 @@ public class Line {
         this.p2 = p2;
         this.dotted = dotted;
     }
+    public Line(Point p1, Point p2, Color color, boolean dotted) {
+        this.p1 = p1;
+        this.p2 = p2;
+        this.color = color;
+        this.dotted = dotted;
+    }
 
     public Point getP1() {
         return p1;
@@ -47,5 +53,9 @@ public class Line {
 
     public boolean isDotted() {
         return dotted;
+    }
+
+    public void setDotted(boolean dotted) {
+        this.dotted = dotted;
     }
 }

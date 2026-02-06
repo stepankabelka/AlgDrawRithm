@@ -19,4 +19,7 @@ public class LineCanvas {
         return lines;
     }
 
+    public void clear() {
+        lines.clear();
+    }
 }

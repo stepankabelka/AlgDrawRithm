@@ -119,13 +119,10 @@ public class Rectangle implements Shape {
 
     @Override
     public ResizeHandle getResizeHandle(int x, int y) {
-        int handleSize = 8;
-        int x1 = Math.min(p1.getX(), p2.getX());
+        int handleSize = 20;
         int y1 = Math.min(p1.getY(), p2.getY());
         int x2 = Math.max(p1.getX(), p2.getX());
-        int y2 = Math.max(p1.getY(), p2.getY());
 
-        // Pouze pravý horní roh
         if (Math.abs(x - x2) <= handleSize && Math.abs(y - y1) <= handleSize) {
             return ResizeHandle.TOP_RIGHT;
         }
@@ -136,17 +133,14 @@ public class Rectangle implements Shape {
     @Override
     public void resizeByHandle(ResizeHandle handle, int dx, int dy) {
         if (handle == ResizeHandle.TOP_RIGHT) {
-            // Zjistíme, který bod je vlevo dole a který vpravo nahoře
             int x1 = Math.min(p1.getX(), p2.getX());
             int y1 = Math.min(p1.getY(), p2.getY());
             int x2 = Math.max(p1.getX(), p2.getX());
             int y2 = Math.max(p1.getY(), p2.getY());
 
-            // Posuneme pravý horní roh
-            x2 += dx;  // Doprava
-            y1 += dy;  // Nahoru (dy je záporné při pohybu nahoru)
+            x2 += dx;
+            y1 += dy;
 
-            // Nastavíme nové body
             p1 = new Point(x1, y1);
             p2 = new Point(x2, y2);
         }

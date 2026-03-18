@@ -25,7 +25,6 @@ public class Circle implements Shape {
 
     @Override
     public void draw(java.util.function.BiConsumer<Integer, Integer> setPixel) {
-        // Bresenham's circle algorithm
         int x = 0;
         int y = radius;
         int d = 3 - 2 * radius;
@@ -103,7 +102,7 @@ public class Circle implements Shape {
     }
     @Override
     public ResizeHandle getResizeHandle(int x, int y) {
-        int handleSize = 8;
+        int handleSize = 12;
 
         int rightX = center.getX() + radius;
         if (Math.abs(x - rightX) <= handleSize && Math.abs(y - center.getY()) <= handleSize) {
@@ -113,6 +112,13 @@ public class Circle implements Shape {
         return ResizeHandle.NONE;
     }
 
+    @Override
+    public void resizeByHandle(ResizeHandle handle, int dx, int dy) {
+        if (handle == ResizeHandle.RIGHT) {
+            radius += dx;
+            if (radius < 5) radius = 5;
+        }
+    }
     @Override
     public Color getColor() { return color; }
 
@@ -151,10 +157,7 @@ public class Circle implements Shape {
     }
 
 
-    @Override
-    public void resizeByHandle(ResizeHandle handle, int dx, int dy) {
 
-    }
 
     @Override
     public models.Rectangle getBounds() {

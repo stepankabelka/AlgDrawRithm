@@ -45,7 +45,6 @@ public class FilledArea implements Shape {
 
     @Override
     public void resize(Point p1, Point p2) {
-        // Not applicable for filled area
     }
 
     @Override
@@ -65,7 +64,6 @@ public class FilledArea implements Shape {
 
     @Override
     public void setThickness(int thickness) {
-        // Not applicable
     }
 
     @Override
@@ -75,7 +73,6 @@ public class FilledArea implements Shape {
 
     @Override
     public void setStyle(LineStyle style) {
-        // Not applicable
     }
 
     @Override
@@ -85,7 +82,6 @@ public class FilledArea implements Shape {
 
     @Override
     public void setFilled(boolean filled) {
-        // Always filled
     }
 
     @Override
@@ -107,7 +103,7 @@ public class FilledArea implements Shape {
 
     @Override
     public ResizeHandle getResizeHandle(int x, int y) {
-        return null;
+        return ResizeHandle.NONE;
     }
 
     @Override

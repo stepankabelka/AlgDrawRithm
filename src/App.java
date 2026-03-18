@@ -39,10 +39,9 @@ public class App {
     private Shape selectedShape = null;
     private Point dragStart = null;
     private boolean isDragging = false;
-    private boolean isResizing = false;
     private ResizeHandle currentResizeHandle = ResizeHandle.NONE;
 
-    public static void main(String[] args) {
+    public static void main() {
         SwingUtilities.invokeLater(() -> new App(1000, 700).start());
     }
 
@@ -269,10 +268,8 @@ public class App {
 
                 if (currentTool == ToolType.LINE) {
                     if (lineStartPoint == null) {
-                        // První kliknutí - nastavíme počáteční bod
                         lineStartPoint = startPoint;
                     } else {
-                        // Druhé kliknutí - vytvoříme čáru
                         Line line = new Line(lineStartPoint, startPoint, currentColor, currentThickness, currentStyle);
                         canvas.addLine(line);
                         lineStartPoint = null;
@@ -287,31 +284,24 @@ public class App {
                     currentPolygon.addPoint(startPoint);
                     redraw();
                 } else if (currentTool == ToolType.SELECT) {
-                    // Nejdřív zkontroluj resize handles u vybraného objektu
                     if (selectedShape != null) {
                         currentResizeHandle = selectedShape.getResizeHandle(e.getX(), e.getY());
                         if (currentResizeHandle != ResizeHandle.NONE) {
-                            // Klikli jsme na resize handle
                             dragStart = startPoint;
                             return;
                         }
                     }
 
-                    // Pokud neklikneme na handle, zkus najít jiný objekt
                     selectedShape = canvas.findShapeAt(e.getX(), e.getY());
                     if (selectedShape != null) {
-                        // Check if clicking on resize handle of newly selected shape
                         currentResizeHandle = selectedShape.getResizeHandle(e.getX(), e.getY());
                         if (currentResizeHandle == ResizeHandle.NONE) {
-                            // Regular drag to move
                             dragStart = startPoint;
                             isDragging = true;
                         } else {
-                            // Resize mode
                             dragStart = startPoint;
                         }
                     } else {
-                        // Klikli jsme mimo všechny objekty - zrušíme výběr
                         currentResizeHandle = ResizeHandle.NONE;
                         isDragging = false;
                     }
@@ -323,14 +313,12 @@ public class App {
                         redraw();
                     }
                 } else if (currentTool == ToolType.FILL) {
-                    // Najít objekt a vyplnit ho
                     Shape shape = canvas.findShapeAt(e.getX(), e.getY());
                     if (shape != null) {
                         shape.setFilled(true);
                         shape.setFillColor(currentFillColor);
                         redraw();
                     } else {
-                        // Pokud neklikneme na objekt, použij flood fill a ulož jako objekt
                         FilledArea filledArea = FloodFill.fill(raster, e.getX(), e.getY(), currentFillColor);
                         if (filledArea != null) {
                             canvas.addShape(filledArea);
@@ -342,25 +330,22 @@ public class App {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (currentTool == ToolType.POLYGON) {
-
+                if (currentTool == ToolType.POLYGON || currentTool == ToolType.LINE) {
                     return;
                 }
 
                 Point endPoint = new Point(e.getX(), e.getY());
 
-                if (isDragging) {
+                if (isDragging || currentResizeHandle != ResizeHandle.NONE) {
                     isDragging = false;
+                    currentResizeHandle = ResizeHandle.NONE;
                     dragStart = null;
+                    redraw();
                     return;
                 }
 
                 Shape shape = null;
                 switch (currentTool) {
-                    case LINE:
-                        Line line = new Line(startPoint, endPoint, currentColor, currentThickness, currentStyle);
-                        canvas.addLine(line);
-                        break;
                     case CIRCLE:
                         int dx = endPoint.getX() - startPoint.getX();
                         int dy = endPoint.getY() - startPoint.getY();
@@ -368,7 +353,7 @@ public class App {
                         shape = new Circle(startPoint, radius, currentColor, currentThickness, currentStyle);
                         break;
                     case RECTANGLE:
-                        shape = new Rectangle(startPoint, endPoint, currentColor, currentThickness, currentStyle);
+                        shape = new models.Rectangle(startPoint, endPoint, currentColor, currentThickness, currentStyle);
                         break;
                 }
 
@@ -402,6 +387,16 @@ public class App {
                         canvas.removeShape(shape);
                         redraw();
                     }
+                    return;
+                }
+
+                if (selectedShape != null && currentResizeHandle != ResizeHandle.NONE) {
+                    Point current = new Point(e.getX(), e.getY());
+                    int dx = current.getX() - dragStart.getX();
+                    int dy = current.getY() - dragStart.getY();
+                    selectedShape.resizeByHandle(currentResizeHandle, dx, dy);
+                    dragStart = current;
+                    redraw();
                     return;
                 }
 
@@ -487,21 +482,20 @@ public class App {
         int y1 = Math.min(points.get(0).getY(), points.get(1).getY());
         int x2 = Math.max(points.get(0).getX(), points.get(1).getX());
         int y2 = Math.max(points.get(0).getY(), points.get(1).getY());
-        int midX = (x1 + x2) / 2;
         int midY = (y1 + y2) / 2;
 
         int handleSize = 20;
         Color handleColor = Color.RED;
 
         if (shape instanceof Circle) {
-            drawHandle(x2, midY, handleSize, handleColor);  // RIGHT
+            drawHandle(x2, midY, handleSize, handleColor);
         }
         else if (shape instanceof models.Rectangle) {
-            drawHandle(x2, y1, handleSize, handleColor);    // TOP_RIGHT
+            drawHandle(x2, y1, handleSize, handleColor);
         }
         else {
-            drawHandle(x2, y1, handleSize, handleColor);           // TOP_RIGHT
-            drawHandle(x2, midY, handleSize, handleColor);         // RIGHT
+            drawHandle(x2, y1, handleSize, handleColor);
+            drawHandle(x2, midY, handleSize, handleColor);
         }
     }
 

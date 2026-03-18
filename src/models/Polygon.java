@@ -33,7 +33,6 @@ public class Polygon implements Shape {
             fillPolygon(setPixel);
         }
 
-        // Draw edges
         for (int i = 0; i < points.size(); i++) {
             Point p1 = points.get(i);
             Point p2 = points.get((i + 1) % points.size());
@@ -44,8 +43,8 @@ public class Polygon implements Shape {
     private void fillPolygon(java.util.function.BiConsumer<Integer, Integer> setPixel) {
         if (points.isEmpty()) return;
 
-        int minY = points.get(0).getY();
-        int maxY = points.get(0).getY();
+        int minY = points.getFirst().getY();
+        int maxY = points.getFirst().getY();
         for (Point p : points) {
             minY = Math.min(minY, p.getY());
             maxY = Math.max(maxY, p.getY());
@@ -129,7 +128,6 @@ public class Polygon implements Shape {
 
     @Override
     public void resize(Point p1, Point p2) {
-        // Not applicable for polygon
     }
 
     @Override
@@ -167,7 +165,7 @@ public class Polygon implements Shape {
 
     @Override
     public ResizeHandle getResizeHandle(int x, int y) {
-        return null;
+        return ResizeHandle.NONE;
     }
 
     @Override

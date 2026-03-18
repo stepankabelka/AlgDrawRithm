@@ -32,7 +32,6 @@ public class TrivialRasterizer implements Rasterizer {
         int thickness = line.getThickness();
         LineStyle style = line.getStyle();
 
-        // Handle vertical line (x1 == x2)
         if (x1 == x2) {
             int startY = Math.min(y1, y2);
             int endY = Math.max(y1, y2);
@@ -45,7 +44,6 @@ public class TrivialRasterizer implements Rasterizer {
             return;
         }
 
-        // Handle horizontal line (y1 == y2)
         if (y1 == y2) {
             int startX = Math.min(x1, x2);
             int endX = Math.max(x1, x2);
@@ -63,7 +61,6 @@ public class TrivialRasterizer implements Rasterizer {
 
         int pixelCount = 0;
         if (Math.abs(k) < 1) {
-            // Iterate over x (more horizontal line)
             int startX = Math.min(x1, x2);
             int endX = Math.max(x1, x2);
 
@@ -74,7 +71,6 @@ public class TrivialRasterizer implements Rasterizer {
                 }
             }
         } else {
-            // Iterate over y (more vertical line)
             int startY = Math.min(y1, y2);
             int endY = Math.max(y1, y2);
 

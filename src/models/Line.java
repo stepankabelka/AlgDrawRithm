@@ -6,8 +6,8 @@ public class Line {
 
     private Point p1, p2;
     private Color color;
-    private boolean dotted = false;
-
+    private int thickness = 1;
+    private LineStyle style = LineStyle.SOLID;
 
     public Line(Point p1, Point p2, Color color) {
         this.p1 = p1;
@@ -15,16 +15,12 @@ public class Line {
         this.color = color;
     }
 
-    public Line(Point p1, Point p2, boolean dotted) {
-        this.p1 = p1;
-        this.p2 = p2;
-        this.dotted = dotted;
-    }
-    public Line(Point p1, Point p2, Color color, boolean dotted) {
+    public Line(Point p1, Point p2, Color color, int thickness, LineStyle style) {
         this.p1 = p1;
         this.p2 = p2;
         this.color = color;
-        this.dotted = dotted;
+        this.thickness = thickness;
+        this.style = style;
     }
 
     public Point getP1() {
@@ -51,11 +47,19 @@ public class Line {
         this.color = color;
     }
 
-    public boolean isDotted() {
-        return dotted;
+    public int getThickness() {
+        return thickness;
     }
 
-    public void setDotted(boolean dotted) {
-        this.dotted = dotted;
+    public void setThickness(int thickness) {
+        this.thickness = thickness;
+    }
+
+    public LineStyle getStyle() {
+        return style;
+    }
+
+    public void setStyle(LineStyle style) {
+        this.style = style;
     }
 }
